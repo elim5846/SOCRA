@@ -16,21 +16,21 @@ def parse():
             blueprint = []
             for robot in line.split("."):
                 match = re.match(pattern, robot.strip())
-                if match:
-                    robot_type, *cost_resource_pairs = match.groups()
-                    for i in range(0, len(cost_resource_pairs), 2):
-                        cost = cost_resource_pairs[i]
-                        resource = cost_resource_pairs[i + 1]
-                        if cost and resource:
-                            if resource.endswith("s"):
-                                resource = resource[:-1]
-                            blueprint.append(
-                                Recipe(
-                                    robot_type=search_enum(robot_type),
-                                    needs={search_enum(resource): int(cost)},
-                                    productivity=1,
-                                )
+                if not (match):
+                    break
+                robot_type, *cost_resource_pairs = match.groups()
+                for i in range(0, len(cost_resource_pairs), 2):
+                    cost = cost_resource_pairs[i]
+                    resource = cost_resource_pairs[i + 1]
+                    if cost and resource:
+                        resource = resource[:-1] if resource.endswith("s") else resource
+                        blueprint.append(
+                            Recipe(
+                                robot_type=search_enum(robot_type),
+                                needs={search_enum(resource): int(cost)},
+                                productivity=1,
                             )
+                        )
             blueprints.append(blueprint)
     return blueprints
 

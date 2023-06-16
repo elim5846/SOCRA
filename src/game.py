@@ -116,7 +116,7 @@ if __name__ == "__main__":
         )
         max_diamonds = game.start()
         results[f"Blueprint {index + 1}"] = max_diamonds
-    f = open("results.txt", "a")
+    f = open("analysis.txt", "a")
     for key, value in results.items():
         f.write(f"{key}: {value}\n")
     max_value = list(results.values()).index(max(results.values()))
