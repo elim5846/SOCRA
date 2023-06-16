@@ -1,0 +1,4 @@
+Blueprint 1: 0
+Blueprint 2: 0
+
+Best blueprint is the blueprint 1.
