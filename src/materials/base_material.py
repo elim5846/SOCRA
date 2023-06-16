@@ -6,3 +6,4 @@ class Type(Enum):
     OBSIDIAN = "obsidian"
     CLAY = "clay"
     GEODE = "geode"
+    DIAMOND = "diamond"

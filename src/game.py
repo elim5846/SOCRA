@@ -2,7 +2,7 @@ from copy import deepcopy
 
 from materials.base_material import Type
 from player.player import Player
-from receipts.receipt import Receipt
+from recipe.recipe import Recipe
 from robots.base_robot import BaseRobot
 
 
@@ -51,13 +51,13 @@ class Game:
                 records[key] = self.index
 
     def __play_no_action(self):
-        self.player.play(receipt_to_use=None)
+        self.player.play(recipe_to_use=None)
         self.max_geodes = max(self.max_geodes, self.player.materials.get(Type.GEODE, 0))
         self.__save_to_records(materials=self.player.materials)
 
-    def __play_action(self, action: Receipt, actual_player: Player):
+    def __play_action(self, action: Recipe, actual_player: Player):
         clone_player = deepcopy(actual_player)
-        clone_player.play(receipt_to_use=action)
+        clone_player.play(recipe_to_use=action)
         self.__save_to_records(materials=clone_player.materials)
         self.__create_new_game_and_get_max_geodes(new_player=clone_player)
 
@@ -79,13 +79,13 @@ limits = {
     Type.GEODE: 2,
 }
 
-receipts = [
-    Receipt(robot_type=Type.ORE, needs={Type.ORE: 4}, productivity=1),
-    Receipt(robot_type=Type.CLAY, needs={Type.ORE: 2}, productivity=1),
-    Receipt(
+recipes = [
+    Recipe(robot_type=Type.ORE, needs={Type.ORE: 4}, productivity=1),
+    Recipe(robot_type=Type.CLAY, needs={Type.ORE: 2}, productivity=1),
+    Recipe(
         robot_type=Type.OBSIDIAN, needs={Type.ORE: 3, Type.CLAY: 14}, productivity=1
     ),
-    Receipt(
+    Recipe(
         robot_type=Type.GEODE, needs={Type.ORE: 2, Type.OBSIDIAN: 7}, productivity=1
     ),
 ]
@@ -93,7 +93,7 @@ receipts = [
 player = Player(
     materials={},
     robots=[BaseRobot(type=Type.ORE, productivity=1)],
-    receipts=receipts,
+    recipes=recipes,
     limits=limits,
 )
 import time
