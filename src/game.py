@@ -80,12 +80,12 @@ limits = {
     Type.DIAMOND: 2,
 }
 
-receipts = parse()
+recipes = parse()
 
 player = Player(
     materials={},
     robots=[BaseRobot(type=Type.ORE, productivity=1)],
-    receipts=receipts[0],
+    recipes=recipes[1],
     limits=limits,
 )
 import time

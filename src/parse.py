@@ -1,5 +1,5 @@
 import re
-from receipts.receipt import Receipt
+from recipe.recipe import Recipe
 from materials.base_material import Type
 
 def parse():
@@ -20,8 +20,7 @@ def parse():
                         if cost and resource:
                             if resource.endswith("s"):
                                 resource = resource[:-1]
-                            
-                            blueprint.append(Receipt(robot_type=search_enum(robot_type), needs={search_enum(resource): int(cost)}, productivity=1))
+                            blueprint.append(Recipe(robot_type=search_enum(robot_type), needs={search_enum(resource): int(cost)}, productivity=1))
             blueprints.append(blueprint)
     return blueprints
 
