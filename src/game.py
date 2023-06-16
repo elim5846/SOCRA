@@ -1,10 +1,13 @@
+import re
+import time
 from copy import deepcopy
 
 from materials.base_material import Type
+from parse import parse
 from player.player import Player
 from recipe.recipe import Recipe
 from robots.base_robot import BaseRobot
-from parse import parse
+
 
 class Game:
     def __init__(
@@ -13,21 +16,21 @@ class Game:
         duration: int,
         index: int,
         records: dict,
-        max_geodes: int,
+        max_diamonds: int,
     ) -> None:
         self.player = player
         self.duration = duration
         self.index = index
         self.records = records
-        self.max_geodes = max_geodes
+        self.max_diamonds = max_diamonds
 
     def start(self):
         if not (self.__validate_records()):
-            return self.max_geodes
+            return self.max_diamonds
         for i in range(self.index, self.duration):
             self.index = i
             self.__process_actions()
-        return self.max_geodes
+        return self.max_diamonds
 
     def __validate_records(self) -> bool:
         for key, value in self.records[self.index].items():
@@ -52,7 +55,9 @@ class Game:
 
     def __play_no_action(self):
         self.player.play(recipe_to_use=None)
-        self.max_geodes = max(self.max_geodes, self.player.materials.get(Type.GEODE, 0))
+        self.max_diamonds = max(
+            self.max_diamonds, self.player.materials.get(Type.DIAMOND, 0)
+        )
         self.__save_to_records(materials=self.player.materials)
 
     def __play_action(self, action: Recipe, actual_player: Player):
@@ -67,47 +72,53 @@ class Game:
             duration=self.duration,
             index=self.index + 1,
             records=self.records,
-            max_geodes=self.max_geodes,
+            max_diamonds=self.max_diamonds,
         )
-        return max(self.max_geodes, new_game.start())
+        return max(self.max_diamonds, new_game.start())
 
 
-limits = {
-    Type.ORE: 1,
-    Type.CLAY: 4,
-    Type.OBSIDIAN: 2,
-    Type.GEODE: 2,
-    Type.DIAMOND: 2,
-}
+def find_limits(recipes: list) -> dict:
+    limits = {}
+    for recipe in recipes:
+        for key, value in recipe.needs.items():
+            limits[key] = max(limits.get(key, 0), value)
+    limits[Type.DIAMOND] = 4
+    return limits
 
-recipes = parse()
 
-player = Player(
-    materials={},
-    robots=[BaseRobot(type=Type.ORE, productivity=1)],
-    recipes=recipes[1],
-    limits=limits,
-)
-import time
-
-start = time.time()
-game = Game(
-    player=player,
-    duration=24,
-    index=0,
-    records=[
-        {
-            Type.ORE: None,
-            Type.CLAY: None,
-            Type.OBSIDIAN: None,
-            Type.GEODE: None,
-            Type.DIAMOND: None,
-        }
-    ]
-    * 25,
-    max_geodes=0,
-)
-print(game.start())
-end = time.time() - start
-print(end)
-print(game.records)
+if __name__ == "__main__":
+    recipes = parse()
+    results = {}
+    for index in range(len(recipes)):
+        recipe = recipes[index]
+        limits = find_limits(recipes=recipe)
+        player = Player(
+            materials={},
+            robots=[BaseRobot(type=Type.ORE, productivity=1)],
+            recipes=recipes[1],
+            limits=limits,
+        )
+        game = Game(
+            player=player,
+            duration=24,
+            index=0,
+            records=[
+                {
+                    Type.ORE: None,
+                    Type.CLAY: None,
+                    Type.OBSIDIAN: None,
+                    Type.GEODE: None,
+                    Type.DIAMOND: None,
+                }
+            ]
+            * 25,
+            max_diamonds=0,
+        )
+        max_diamonds = game.start()
+        results[f"Blueprint {index + 1}"] = max_diamonds
+    f = open("results.txt", "a")
+    for key, value in results.items():
+        f.write(f"{key}: {value}\n")
+    max_value = list(results.values()).index(max(results.values()))
+    f.write(f"Best blueprint is the blueprint {max_value + 1}.\n")
+    f.close()

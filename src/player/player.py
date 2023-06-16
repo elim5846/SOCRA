@@ -32,9 +32,7 @@ class Player:
             self.materials[robot.type] += robot.productivity
 
     def __should_use_recipe(self, recipe: Recipe) -> bool:
-        return self.__can_craft(recipe=recipe) and self.__should_craft(
-            recipe=recipe
-        )
+        return self.__can_craft(recipe=recipe) and self.__should_craft(recipe=recipe)
 
     def __should_craft(self, recipe: Recipe) -> bool:
         nb_recipe_robot_in_stock = len(
