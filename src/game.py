@@ -120,5 +120,5 @@ if __name__ == "__main__":
     for key, value in results.items():
         f.write(f"{key}: {value}\n")
     max_value = list(results.values()).index(max(results.values()))
-    f.write(f"\nBest blueprint is the blueprint {max_value + 1}.")
+    f.write(f"Best blueprint is the blueprint {max_value + 1}.\n")
     f.close()
