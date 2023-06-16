@@ -21,22 +21,20 @@ class Game:
         self.max_geodes = max_geodes
 
     def start(self):
-        max_geode = self.player.materials.get(Type.GEODE, 0)
-
         for i in range(self.index, self.time):
             self.index = i
             actions = self.player.get_actions_could_do()
             self.__process_actions(actions=actions)
-        return max_geode
-    
+        return self.max_geodes
+
     def __process_actions(self, actions: list) -> None:
         for action in actions:
             actual_player_state = deepcopy(self.player)
-            if not(action):
+            if not (action):
                 self.__play_no_action()
             else:
                 self.__play_action(action=action, actual_player=actual_player_state)
-    
+
     def __save_to_records(self, materials: dict):
         for key in materials:
             records = self.records[self.index]
@@ -45,7 +43,7 @@ class Game:
 
     def __play_no_action(self):
         self.player.play(receipt_to_use=None)
-        max_geode = max(self.max_geodes, self.player.materials.get(Type.GEODE, 0))
+        self.max_geodes = max(self.max_geodes, self.player.materials.get(Type.GEODE, 0))
         self.__save_to_records(materials=self.player.materials)
 
     def __play_action(self, action: Receipt, actual_player: Player):
@@ -60,10 +58,9 @@ class Game:
             time=self.time,
             index=self.index + 1,
             records=self.records,
-            max_geodes=self.max_geodes
+            max_geodes=self.max_geodes,
         )
         return max(self.max_geodes, new_game.start())
-
 
 
 limits = {
@@ -106,7 +103,7 @@ game = Game(
         }
     ]
     * 25,
-    max_geodes=0
+    max_geodes=0,
 )
 print(game.start())
 end = time.time() - start
