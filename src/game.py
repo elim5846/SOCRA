@@ -27,8 +27,8 @@ class Game:
     def start(self):
         if not (self.__validate_records()):
             return self.max_diamonds
-        for i in range(self.index, self.duration):
-            self.index = i
+        for _ in range(self.index, self.duration):
+            self.index += 1
             self.__process_actions()
         return self.max_diamonds
 
