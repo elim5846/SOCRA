@@ -1,6 +1,7 @@
-from player.player import Player
 from copy import deepcopy
+
 from materials.base_material import Type
+from player.player import Player
 from receipts.receipt import Receipt
 from robots.base_robot import BaseRobot
 
@@ -9,25 +10,33 @@ class Game:
     def __init__(
         self,
         player: Player,
-        time: int,
+        duration: int,
         index: int,
         records: dict,
         max_geodes: int,
     ) -> None:
         self.player = player
-        self.time = time
+        self.duration = duration
         self.index = index
         self.records = records
         self.max_geodes = max_geodes
 
     def start(self):
-        for i in range(self.index, self.time):
+        if not (self.__validate_records()):
+            return self.max_geodes
+        for i in range(self.index, self.duration):
             self.index = i
-            actions = self.player.get_actions_could_do()
-            self.__process_actions(actions=actions)
+            self.__process_actions()
         return self.max_geodes
 
-    def __process_actions(self, actions: list) -> None:
+    def __validate_records(self) -> bool:
+        for key, value in self.records[self.index].items():
+            if value and self.player.materials.get(key) is None:
+                return False
+        return True
+
+    def __process_actions(self) -> None:
+        actions = self.player.get_actions_could_do()
         for action in actions:
             actual_player_state = deepcopy(self.player)
             if not (action):
@@ -55,7 +64,7 @@ class Game:
     def __create_new_game_and_get_max_geodes(self, new_player: Player) -> int:
         new_game = Game(
             player=new_player,
-            time=self.time,
+            duration=self.duration,
             index=self.index + 1,
             records=self.records,
             max_geodes=self.max_geodes,
@@ -92,7 +101,7 @@ import time
 start = time.time()
 game = Game(
     player=player,
-    time=24,
+    duration=24,
     index=0,
     records=[
         {
