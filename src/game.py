@@ -1,9 +1,8 @@
 from player.player import Player
 from copy import deepcopy
 from materials.base_material import Type
-from receipts.receipt import Receipt
 from robots.base_robot import BaseRobot
-
+from parse import parse
 
 class Game:
     def __init__(
@@ -88,23 +87,15 @@ limits = {
     Type.CLAY: 4,
     Type.OBSIDIAN: 2,
     Type.GEODE: 2,
+    Type.DIAMOND: 2,
 }
 
-receipts = [
-    Receipt(robot_type=Type.ORE, needs={Type.ORE: 4}, productivity=1),
-    Receipt(robot_type=Type.CLAY, needs={Type.ORE: 2}, productivity=1),
-    Receipt(
-        robot_type=Type.OBSIDIAN, needs={Type.ORE: 3, Type.CLAY: 14}, productivity=1
-    ),
-    Receipt(
-        robot_type=Type.GEODE, needs={Type.ORE: 2, Type.OBSIDIAN: 7}, productivity=1
-    ),
-]
+receipts = parse()
 
 player = Player(
     materials={},
     robots=[BaseRobot(type=Type.ORE, productivity=1)],
-    receipts=receipts,
+    receipts=receipts[0],
     limits=limits,
 )
 import time
@@ -120,6 +111,7 @@ game = Game(
             Type.CLAY: None,
             Type.OBSIDIAN: None,
             Type.GEODE: None,
+            Type.DIAMOND: None,
         }
     ]
     * 25,
