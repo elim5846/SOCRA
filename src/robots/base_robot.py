@@ -6,5 +6,3 @@ class BaseRobot:
         self.type = type
         self.productivity = productivity
 
-    def farm(self) -> int:
-        return self.productivity
