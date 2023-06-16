@@ -7,7 +7,13 @@ from robots.base_robot import BaseRobot
 
 class Game:
     def __init__(
-        self, player: Player, time: int, index: int, records: dict, immune: bool, counter: int
+        self,
+        player: Player,
+        time: int,
+        index: int,
+        records: dict,
+        immune: bool,
+        counter: int,
     ) -> None:
         self.player = player
         self.time = time
@@ -23,7 +29,14 @@ class Game:
         #     if (self.player.materials.get(key) is None) or (self.index > records[key] and not(self.immune)):
         #         return max_geode
 
-        if (all([self.records[key] is not None for key in self.records])) and (all([self.index > self.records[key] for key in self.records]) and not(self.immune)):
+        """
+        code pas fou ici mon on essaie deja de faire marcher le tout
+        """
+
+        if (all([self.records[key] is not None for key in self.records])) and (
+            all([self.index > self.records[key] for key in self.records])
+            and not (self.immune)
+        ):
             return max_geode
 
         for i in range(self.index, self.time):
@@ -57,7 +70,7 @@ class Game:
                         index=i + 1,
                         records=self.records,
                         immune=self.immune,
-                        counter=0
+                        counter=0,
                     )
                     max_geode = max(max_geode, new_game.start())
         return max_geode
