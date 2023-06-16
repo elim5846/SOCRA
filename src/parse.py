@@ -10,7 +10,7 @@ def parse():
         r"Each (\w+) robot costs (\d+) (\w+)(?:, (\d+) (\w+))?(?: and (\d+) (\w+))?"
     )
 
-    with open("src/blueprints.txt", "r") as file:
+    with open("blueprints.txt", "r") as file:
         blueprints = []
         for line in file:
             blueprint = []
